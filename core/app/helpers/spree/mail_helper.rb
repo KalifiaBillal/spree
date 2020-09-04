@@ -11,11 +11,15 @@ module Spree
       order.name || Spree.t('customer')
     end
 
+    def logo_store
+      @order&.store || current_store
+    end
+
     def logo_path
-      if current_store.present? && current_store.logo.attached? && current_store.logo.variable?
-        main_app.url_for(current_store.logo.variant(resize: '244x104>'))
-      elsif current_store.present? && current_store.logo.attached? && current_store.logo.image?
-        main_app.url_for(current_store.logo)
+      if logo_store.present? && logo_store.logo.attached? && logo_store.logo.variable?
+        main_app.url_for(logo_store.logo.variant(resize: '244x104>'))
+      elsif logo_store.present? && logo_store.logo.attached? && logo_store.logo.image?
+        main_app.url_for(logo_store.logo)
       else
         Spree::Config.mailer_logo || Spree::Config.logo
       end
